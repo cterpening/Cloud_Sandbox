@@ -1,0 +1,67 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.1.0",
+  "id": "broken-dependency",
+  "title": "The Broken Storage Dependency",
+  "summary": "Investigate an API returning 503 because its table setting is wrong; repair it through Terraform and verify recovery.",
+  "state": "implemented",
+  "difficulty": "beginner",
+  "time_tier": "standard",
+  "domains": [
+    "troubleshooting",
+    "configuration",
+    "sre"
+  ],
+  "portable_capabilities": [
+    "synthetic_incident",
+    "dependency_diagnosis",
+    "configuration_repair"
+  ],
+  "objectives": [
+    "Investigate an API returning 503 because its table setting is wrong; repair it through Terraform and verify recovery.",
+    "Compare local stand-ins with real Azure services.",
+    "Export sanitized evidence and clean up only this deployment."
+  ],
+  "implementations": {
+    "azure": {
+      "status": "implemented",
+      "estimated_minutes": 45,
+      "required_services": [
+        "azure_functions",
+        "app_service",
+        "storage",
+        "application_insights",
+        "log_analytics",
+        "monitor_alerts"
+      ],
+      "optional_services": [],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "resource_requirements": {
+        "app_service": {
+          "sku": "Y1",
+          "server_farms": 1
+        }
+      },
+      "sandbox_notes": [
+        "Implemented and tested offline; not verified in a live sandbox.",
+        "Run one project at a time. Reuse the assigned group; never own it in Terraform.",
+        "Short-lived connection strings and authenticated public service endpoints are sandbox compromises."
+      ],
+      "production_extensions": [
+        "Use least-privilege workload identities, private networking where supported, durable state and release controls.",
+        "Add load, security and resilience tests appropriate to a production workload."
+      ]
+    }
+  },
+  "evidence": [
+    "Bounded functional-check summary",
+    "Relevant sanitized telemetry",
+    "Reviewed cleanup outcome"
+  ],
+  "verification_records": []
+}

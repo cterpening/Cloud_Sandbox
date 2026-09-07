@@ -1,0 +1,46 @@
+# Historical v0.1 reference (kept locally for comparison)
+/SandboxPluralSight-main/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.pfx
+*.key
+credentials.json
+
+# Generated evidence and reports
+evidence/
+reports/generated/
+artifacts/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Application build output
+bin/
+obj/
+node_modules/
+dist/
+__pycache__/
+*.pyc
+.venv/
+.python_packages/
+local.settings.json
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+!*.tfvars.json.example
+*.zip

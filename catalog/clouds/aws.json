@@ -1,0 +1,28 @@
+{
+  "$schema": "../../schemas/cloud.schema.json",
+  "schema_version": "0.1.0",
+  "id": "aws",
+  "display_name": "Amazon Web Services",
+  "implementation_status": "planned",
+  "infrastructure_options": [
+    "terraform",
+    "cloudformation",
+    "cdk"
+  ],
+  "initial_service_ids": [
+    "lambda",
+    "cloudwatch",
+    "xray",
+    "s3",
+    "dynamodb",
+    "sqs",
+    "eventbridge",
+    "ecs",
+    "fargate",
+    "eks",
+    "bedrock",
+    "iam",
+    "secrets_manager",
+    "vpc"
+  ]
+}

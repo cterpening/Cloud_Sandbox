@@ -1,0 +1,233 @@
+{
+  "$schema": "../../../schemas/platform-profile.schema.json",
+  "schema_version": "0.1.0",
+  "platform": "pluralsight",
+  "cloud": "azure",
+  "profile_status": "active",
+  "coverage": "initial_priority_services",
+  "reviewed_on": "2026-09-06",
+  "sources": [
+    {
+      "title": "Azure cloud sandbox",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24392988447636-Azure-cloud-sandbox",
+      "source_updated_on": "2026-07-20"
+    },
+    {
+      "title": "AI sandboxes",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24564569570580-AI-sandboxes",
+      "source_updated_on": "2026-06-15"
+    },
+    {
+      "title": "Hands-on Playground overview",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24564263824404-Hands-on-Playground-overview",
+      "source_updated_on": "2026-03-19"
+    },
+    {
+      "title": "Cloud sandboxes getting started",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24425549311380-Cloud-sandboxes-getting-started",
+      "source_updated_on": "2026-06-23"
+    }
+  ],
+  "session": {
+    "standard_minutes": 240,
+    "maximum_documented_minutes": 480,
+    "maximum_requires_business_plan": true,
+    "persistent": false,
+    "maximum_concurrent_sandboxes": 1
+  },
+  "scope": {
+    "regions": ["canadaeast", "centralus", "eastus", "eastus2", "northcentralus", "southcentralus", "westcentralus", "westus2", "centralindia", "southindia", "westindia", "japanwest", "koreacentral", "koreasouth", "eastasia", "germanynorth", "germanywestcentral", "global"],
+    "resource_group_creation": "unsupported",
+    "billing_access": "unsupported",
+    "notes": [
+      "Published region allowlist checked 2026-09-06. Actual service capacity must still be checked per session; global is not a deployable region for these labs.",
+      "Additional resource groups and role assignments are prohibited. Use the assigned group without importing it into Terraform state.",
+      "A runtime preflight should detect the current subscription, usable resource group, locations, providers, and quotas without exporting identifiers."
+    ]
+  },
+  "capabilities": {
+    "managed_identity": "unsupported",
+    "entra_administration": "unsupported",
+    "gpu": "unsupported",
+    "tpu": "unsupported",
+    "resource_group_creation": "unsupported",
+    "concurrent_ai_and_cloud_sandboxes": "unsupported"
+  },
+  "services": {
+    "azure_functions": {
+      "status": "supported",
+      "notes": ["Listed as supported in the Azure cloud sandbox."]
+    },
+    "storage": {
+      "status": "conditional",
+      "limits": {
+        "purge_protection": false,
+        "legal_holds": false,
+        "locked_immutability": false
+      },
+      "notes": ["Storage is available, but selected compliance and retention controls are restricted."]
+    },
+    "application_insights": {
+      "status": "supported",
+      "notes": ["Represented by the supported Azure Monitor Insights capability in the public table."]
+    },
+    "log_analytics": {
+      "status": "supported",
+      "notes": ["Represented by Azure Monitor Operational Insights in the public table."]
+    },
+    "monitor_alerts": {
+      "status": "supported",
+      "notes": ["Azure Monitor Alerts Management is listed as supported."]
+    },
+    "container_apps": {
+      "status": "supported",
+      "notes": ["Provider registration and regional capacity still require runtime validation."]
+    },
+    "container_instances": {
+      "status": "conditional",
+      "limits": {
+        "maximum_container_groups": 6,
+        "maximum_containers_per_group": 2,
+        "maximum_cpu_per_container": 2,
+        "maximum_memory_gb_per_container": 2
+      }
+    },
+    "container_registry": {
+      "status": "conditional",
+      "limits": {
+        "maximum_registries": 1,
+        "registry_tasks": false
+      }
+    },
+    "app_service": {
+      "status": "conditional",
+      "limits": {
+        "allowed_skus": ["F1", "B1", "B2", "B3", "S1", "Y1"],
+        "maximum_server_farms": 2
+      }
+    },
+    "virtual_machines": {
+      "status": "conditional",
+      "limits": {
+        "maximum_instances": 10,
+        "maximum_total_cpus": 10,
+        "maximum_memory_gb_single_instance": 14,
+        "gpu": false,
+        "tpu": false
+      },
+      "notes": ["Only selected small A, B, D, DS, and F SKUs are permitted; consult the source before implementation."]
+    },
+    "aks": {
+      "status": "conditional",
+      "limits": {
+        "maximum_clusters": 3,
+        "maximum_nodes_per_cluster": 3,
+        "secondary_resource_group_management": false,
+        "gpu": false
+      }
+    },
+    "ai_search": {
+      "status": "conditional",
+      "limits": {
+        "allowed_skus": ["free", "basic"],
+        "maximum_resources": 1,
+        "maximum_indexes": 1,
+        "maximum_indexers": 1,
+        "maximum_data_sources": 1,
+        "maximum_skillsets": 1,
+        "maximum_documents": 20000,
+        "maximum_storage_mb": 500,
+        "maximum_vector_index_mb": 500
+      }
+    },
+    "azure_openai": {
+      "status": "separate_environment",
+      "limits": {
+        "assigned_tpm": 4000,
+        "additional_deployments": false,
+        "user_selected_region": false
+      },
+      "notes": ["Available through the separate Azure AI cloud sandbox, not as a user-created deployment in the normal Azure sandbox."]
+    },
+    "ai_foundry": {
+      "status": "unsupported",
+      "notes": ["Azure AI Foundry is listed as unavailable in the normal Azure cloud sandbox."]
+    },
+    "cosmos_db": {
+      "status": "conditional",
+      "limits": {
+        "maximum_ru_per_second": 1000,
+        "serverless": false,
+        "provisioned_throughput_required": true
+      }
+    },
+    "sql_database": {
+      "status": "conditional",
+      "limits": {
+        "allowed_skus": ["Basic", "S0", "S1", "S2", "S3", "S4", "DW100c", "DW200c"]
+      }
+    },
+    "postgresql": {
+      "status": "conditional",
+      "notes": ["Only selected small B and D-series SKUs are permitted; consult the current source table."]
+    },
+    "event_grid": {
+      "status": "supported"
+    },
+    "event_hubs": {
+      "status": "conditional",
+      "limits": {
+        "allowed_tiers": ["basic", "standard"],
+        "clusters": false,
+        "capture": false
+      }
+    },
+    "service_bus": {
+      "status": "supported"
+    },
+    "logic_apps": {
+      "status": "supported"
+    },
+    "api_management": {
+      "status": "conditional",
+      "limits": {
+        "allowed_skus": ["Developer", "Basic", "Standard", "Consumption"]
+      }
+    },
+    "key_vault": {
+      "status": "supported",
+      "notes": ["Managed identity is separately unavailable, so production access patterns require an extension."]
+    },
+    "sentinel": {
+      "status": "supported"
+    },
+    "azure_policy": {
+      "status": "supported"
+    },
+    "virtual_network": {
+      "status": "conditional",
+      "notes": ["ExpressRoute circuit and gateway actions are denied."]
+    },
+    "private_link": {
+      "status": "supported"
+    },
+    "nat_gateway": {
+      "status": "supported"
+    },
+    "application_gateway": {
+      "status": "supported"
+    },
+    "front_door": {
+      "status": "supported"
+    },
+    "azure_firewall": {
+      "status": "conditional",
+      "limits": {
+        "allowed_skus": ["Basic"]
+      }
+    },
+    "azure_devops": {
+      "status": "unsupported"
+    }
+  }
+}

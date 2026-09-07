@@ -1,0 +1,7 @@
+[
+  {"id":"queues","title":"Queue retry workshop","content":"Poison messages repeatedly fail processing. A dead-letter queue keeps failed messages available for inspection. Correct the payload and resubmit it; use idempotent receipts to handle duplicates."},
+  {"id":"dns","title":"Private DNS workshop","content":"A private endpoint needs correct DNS resolution from the client network. Compare the resolved address with the intended private address before changing firewall rules."},
+  {"id":"latency","title":"Slow API workshop","content":"Correlate a slow request with its dependencies and traces. Measure latency before and after a small controlled change. Small synthetic samples are not production performance benchmarks."},
+  {"id":"identity","title":"Sandbox identity workshop","content":"This workshop uses temporary keys where managed identity is unavailable. Keep keys out of Git and evidence. A production extension should use least-privilege workload identities."},
+  {"id":"cleanup","title":"Cleanup workshop","content":"Export sanitized evidence before the session expires. Inspect the Terraform destroy plan and remove only the resources owned by the experiment. Preserve the supplied resource group."}
+]

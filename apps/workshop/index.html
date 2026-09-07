@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sandbox workshop</title>
+<style>
+body{font:17px system-ui;background:#f4f5f1;color:#18332a;max-width:800px;margin:3rem auto;padding:0 1.5rem}h1{font-size:2.5rem}label{display:block;margin:1rem 0 .3rem}input,textarea,button,select{font:inherit;padding:.65rem;border:1px solid #80988d;border-radius:5px;box-sizing:border-box}input,textarea,select{width:100%}button{background:#18332a;color:white;margin:.8rem .4rem 0 0;cursor:pointer}pre{background:white;white-space:pre-wrap;overflow-wrap:anywhere;padding:1rem;border:1px solid #ccd8cc}small{display:block;margin:.6rem 0;color:#526458}
+</style>
+<h1>Sandbox workshop</h1>
+<p>Try a small experiment. Use synthetic data only.</p>
+<label for="key">Function key (Azure only)</label><input id="key" type="password" autocomplete="off">
+<small>Kept only in this page's memory. Leave blank for the local runner.</small>
+<label for="route">Experiment</label>
+<select id="route">
+<option value="GET /api/health">All projects: check health</option>
+<option value="GET /api/work">API: normal request</option>
+<option value="GET /api/work?mode=slow">API: slow request</option>
+<option value="GET /api/work?mode=fail">API: synthetic failure</option>
+<option value="GET /api/notes">Notes: list notes</option>
+<option value="POST /api/notes">Notes: add note</option>
+<option value="POST /api/messages">Queue: submit message</option>
+<option value="POST /api/tick">Queue: process once (local only)</option>
+<option value="GET /api/receipts">Queue: inspect receipts</option>
+<option value="GET /api/deadletters">Queue: inspect dead letters</option>
+<option value="GET /api/checkout">Broken dependency: try checkout</option>
+<option value="POST /api/seed">Search: load sample documents</option>
+<option value="GET /api/search?q=poison">Search: find poison-message guidance</option>
+</select>
+<label for="body">JSON body (POST requests)</label><textarea id="body" rows="3">{}</textarea>
+<button id="send">Run experiment</button>
+<pre id="result" aria-live="polite">Choose an experiment for the project you started.</pre>
+<script>
+const route=document.querySelector('#route'),body=document.querySelector('#body'),result=document.querySelector('#result');
+route.addEventListener('change',()=>{body.value=route.value.includes('/notes')?'{"text":"A synthetic workshop note"}':route.value.includes('/messages')?'{"id":"demo-order-1","kind":"normal"}':'{}';});
+document.querySelector('#send').addEventListener('click',async()=>{
+ const [method,path]=route.value.split(' ');const headers={'Content-Type':'application/json'};
+ const key=document.querySelector('#key').value;if(key)headers['x-functions-key']=key;
+ try{const response=await fetch(path,{method,headers,...(method==='POST'?{body:body.value}:{})});
+ const text=await response.text();let formatted=text;try{formatted=JSON.stringify(JSON.parse(text),null,2)}catch{}
+ result.textContent=`HTTP ${response.status}\n${formatted}`;}catch{result.textContent='Request failed. Check the running project and network.';}
+});
+</script>
+</html>

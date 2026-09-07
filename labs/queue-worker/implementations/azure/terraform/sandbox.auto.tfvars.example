@@ -1,0 +1,4 @@
+# Copy to sandbox.auto.tfvars and replace both synthetic placeholders.
+resource_group_name = "REPLACE-WITH-ASSIGNED-GROUP"
+location = "eastus"
+client_cidr = "192.0.2.10/32"

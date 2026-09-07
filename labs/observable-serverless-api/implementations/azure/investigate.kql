@@ -1,0 +1,14 @@
+// Run in the lab Log Analytics workspace after generating synthetic traffic.
+// Request/trace ingestion may take several minutes. Do not publish raw URLs/IDs.
+AppRequests
+| where TimeGenerated > ago(30m)
+| summarize Requests=count(), Failures=countif(Success == false), P95DurationMs=percentile(DurationMs, 95) by bin(TimeGenerated, 1m)
+| order by TimeGenerated asc
+
+// Select/run this query separately. Correlation IDs are synthetic application IDs.
+AppTraces
+| where TimeGenerated > ago(30m)
+| where Message contains 'workshop_request'
+| extend event=parse_json(Message)
+| project TimeGenerated, Project=tostring(event.project), Status=toint(event.status), DurationMs=tolong(event.duration_ms), Correlation=tostring(event.correlation_id)
+| order by TimeGenerated desc

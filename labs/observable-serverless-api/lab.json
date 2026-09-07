@@ -1,0 +1,120 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.1.0",
+  "id": "observable-serverless-api",
+  "title": "Observable Serverless API",
+  "summary": "Deploy a small serverless API, generate synthetic success and failure traffic, investigate telemetry, create an alert, collect evidence, and clean up safely.",
+  "state": "implemented",
+  "difficulty": "intermediate",
+  "time_tier": "standard",
+  "domains": [
+    "serverless",
+    "observability",
+    "sre",
+    "infrastructure_as_code"
+  ],
+  "portable_capabilities": [
+    "http_serverless_compute",
+    "object_storage",
+    "centralized_logging",
+    "application_tracing",
+    "metrics_and_alerts",
+    "synthetic_incident",
+    "evidence_export"
+  ],
+  "objectives": [
+    "Provision a minimal observable serverless workload with infrastructure as code.",
+    "Generate successful, failed, and intentionally slow requests.",
+    "Use logs and traces to identify the synthetic incident's cause.",
+    "Configure and verify an operational alert.",
+    "Export sanitized evidence before the temporary environment expires.",
+    "Explain how identity, networking, deployment, and monitoring should change in production."
+  ],
+  "implementations": {
+    "azure": {
+      "status": "implemented",
+      "estimated_minutes": 75,
+      "required_services": [
+        "azure_functions",
+        "app_service",
+        "storage",
+        "application_insights",
+        "log_analytics",
+        "monitor_alerts"
+      ],
+      "optional_services": [],
+      "resource_requirements": {"app_service": {"sku": "Y1", "server_farms": 1}},
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "sandbox_notes": [
+        "Implemented and tested offline; no live sandbox verification is claimed.",
+        "The implementation must accept an existing resource group.",
+        "Managed identity cannot be required in the Pluralsight Azure sandbox.",
+        "Any connection string used for sandbox execution must be short-lived, excluded from Git, and labeled as a sandbox compromise."
+      ],
+      "production_extensions": [
+        "Use managed identity instead of application credentials or storage keys.",
+        "Add private endpoints, private DNS, and controlled egress where appropriate.",
+        "Use workload identity federation for deployment automation.",
+        "Add release slots or an equivalent safe deployment strategy.",
+        "Define SLOs, actionable alert routing, retention, and access controls."
+      ]
+    },
+    "aws": {
+      "status": "idea",
+      "estimated_minutes": 75,
+      "required_services": [
+        "lambda",
+        "s3",
+        "cloudwatch",
+        "xray"
+      ],
+      "optional_services": [
+        "dynamodb"
+      ],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "sandbox_notes": ["Future implementation; requirements have not been verified through a complete run."],
+      "production_extensions": ["Use least-privilege roles, private connectivity, structured release controls, and production retention policies."]
+    },
+    "gcp": {
+      "status": "idea",
+      "estimated_minutes": 75,
+      "required_services": [
+        "cloud_functions",
+        "cloud_storage",
+        "cloud_logging",
+        "cloud_monitoring"
+      ],
+      "optional_services": [
+        "firestore"
+      ],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "sandbox_notes": ["Future implementation; requirements have not been verified through a complete run."],
+      "production_extensions": ["Use least-privilege service identities, private connectivity, structured release controls, and production retention policies."]
+    }
+  },
+  "evidence": [
+    "Sanitized deployment summary",
+    "Successful request result",
+    "Failed request result",
+    "Slow request result",
+    "Correlated log or trace query",
+    "Alert definition and observed state",
+    "Cleanup result"
+  ],
+  "verification_records": []
+}

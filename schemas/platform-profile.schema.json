@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/platform-profile.schema.json",
+  "title": "Sandbox platform and cloud profile",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "platform",
+    "cloud",
+    "profile_status",
+    "coverage",
+    "reviewed_on",
+    "sources",
+    "session",
+    "scope",
+    "capabilities",
+    "services"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"type": "string"},
+    "platform": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "cloud": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "profile_status": {"enum": ["active", "seed", "retired"]},
+    "coverage": {"enum": ["initial_priority_services", "future_seed", "complete"]},
+    "reviewed_on": {"type": "string", "format": "date"},
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["title", "url"],
+        "properties": {
+          "title": {"type": "string", "minLength": 1},
+          "url": {"type": "string", "format": "uri", "pattern": "^https://"},
+          "source_updated_on": {"type": "string", "format": "date"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "session": {
+      "type": "object",
+      "required": ["standard_minutes", "persistent", "maximum_concurrent_sandboxes"],
+      "properties": {
+        "standard_minutes": {"type": "integer", "minimum": 1},
+        "maximum_documented_minutes": {"type": "integer", "minimum": 1},
+        "maximum_requires_business_plan": {"type": "boolean"},
+        "persistent": {"type": "boolean"},
+        "maximum_concurrent_sandboxes": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "required": ["regions", "resource_group_creation", "billing_access", "notes"],
+      "properties": {
+        "regions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "resource_group_creation": {"enum": ["supported", "conditional", "unsupported", "unknown", "not_applicable"]},
+        "billing_access": {"enum": ["supported", "conditional", "unsupported", "unknown", "not_applicable"]},
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": ["supported", "conditional", "unsupported", "unknown", "not_applicable"]
+      }
+    },
+    "services": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {"enum": ["supported", "conditional", "separate_environment", "unsupported", "unknown"]},
+          "limits": {"type": "object"},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

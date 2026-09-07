@@ -1,0 +1,90 @@
+{
+  "$schema": "../../../schemas/platform-profile.schema.json",
+  "schema_version": "0.1.0",
+  "platform": "pluralsight",
+  "cloud": "gcp",
+  "profile_status": "seed",
+  "coverage": "future_seed",
+  "reviewed_on": "2026-09-06",
+  "sources": [
+    {
+      "title": "GCP cloud sandbox",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24393018682388-GCP-cloud-sandbox",
+      "source_updated_on": "2026-08-20"
+    },
+    {
+      "title": "AI sandboxes",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24564569570580-AI-sandboxes",
+      "source_updated_on": "2026-06-15"
+    }
+  ],
+  "session": {
+    "standard_minutes": 240,
+    "maximum_documented_minutes": 480,
+    "maximum_requires_business_plan": true,
+    "persistent": false,
+    "maximum_concurrent_sandboxes": 1
+  },
+  "scope": {
+    "regions": ["US-East-1", "US-West-1", "US-Central-1", "Europe-West-1", "Australia-Southeast-1"],
+    "resource_group_creation": "not_applicable",
+    "billing_access": "unknown",
+    "notes": [
+      "Cannot set or change quotas.",
+      "Cannot assign permissions to roles or users.",
+      "Cloud Storage is limited to 1024 MB.",
+      "This is a future seed profile and is not ready for lab verification."
+    ]
+  },
+  "capabilities": {
+    "managed_identity": "not_applicable",
+    "entra_administration": "not_applicable",
+    "gpu": "unknown",
+    "tpu": "unknown",
+    "resource_group_creation": "not_applicable",
+    "concurrent_ai_and_cloud_sandboxes": "unsupported"
+  },
+  "services": {
+    "cloud_functions": {
+      "status": "conditional",
+      "limits": {"maximum_functions": 3}
+    },
+    "cloud_run": {
+      "status": "conditional",
+      "limits": {
+        "maximum_services": 1,
+        "maximum_cpu_per_instance": 2,
+        "maximum_memory_gb_per_instance": 4
+      }
+    },
+    "cloud_logging": {"status": "supported"},
+    "cloud_monitoring": {"status": "supported"},
+    "cloud_storage": {
+      "status": "conditional",
+      "limits": {"maximum_storage_mb": 1024}
+    },
+    "pubsub": {"status": "supported"},
+    "firestore": {"status": "supported"},
+    "cloud_sql": {
+      "status": "conditional",
+      "limits": {
+        "maximum_instances": 4,
+        "maximum_total_cpus": 8,
+        "maximum_memory_gb_per_instance": 8,
+        "maximum_disk_gb_per_instance": 100
+      }
+    },
+    "gke": {
+      "status": "conditional",
+      "limits": {"autopilot": false}
+    },
+    "artifact_registry": {"status": "supported"},
+    "vertex_ai": {"status": "unsupported"},
+    "vertex_workbench": {
+      "status": "separate_environment",
+      "notes": ["Conditionally supported through the GCP AI cloud sandbox."]
+    },
+    "iam": {"status": "unsupported"},
+    "vpc": {"status": "supported"}
+  }
+}

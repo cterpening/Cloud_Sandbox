@@ -1,0 +1,77 @@
+{
+  "$schema": "../../../schemas/platform-profile.schema.json",
+  "schema_version": "0.1.0",
+  "platform": "pluralsight",
+  "cloud": "aws",
+  "profile_status": "seed",
+  "coverage": "future_seed",
+  "reviewed_on": "2026-09-06",
+  "sources": [
+    {
+      "title": "AWS cloud sandbox",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24425443133076-AWS-cloud-sandbox",
+      "source_updated_on": "2026-06-25"
+    },
+    {
+      "title": "AI sandboxes",
+      "url": "https://help.pluralsight.com/hc/en-us/articles/24564569570580-AI-sandboxes",
+      "source_updated_on": "2026-06-15"
+    }
+  ],
+  "session": {
+    "standard_minutes": 240,
+    "maximum_documented_minutes": 480,
+    "maximum_requires_business_plan": true,
+    "persistent": false,
+    "maximum_concurrent_sandboxes": 1
+  },
+  "scope": {
+    "regions": ["us-east-1", "us-west-2"],
+    "resource_group_creation": "not_applicable",
+    "billing_access": "unsupported",
+    "notes": ["This is a future seed profile and is not ready for lab verification."]
+  },
+  "capabilities": {
+    "managed_identity": "not_applicable",
+    "entra_administration": "not_applicable",
+    "gpu": "unsupported",
+    "tpu": "not_applicable",
+    "resource_group_creation": "not_applicable",
+    "concurrent_ai_and_cloud_sandboxes": "unsupported"
+  },
+  "services": {
+    "lambda": {
+      "status": "conditional",
+      "limits": {
+        "maximum_functions": 10,
+        "maximum_memory_mb_per_function": 2048
+      }
+    },
+    "cloudwatch": {"status": "supported"},
+    "xray": {"status": "supported"},
+    "s3": {"status": "supported"},
+    "dynamodb": {"status": "supported"},
+    "sqs": {"status": "supported"},
+    "eventbridge": {"status": "supported"},
+    "ecs": {"status": "supported"},
+    "fargate": {
+      "status": "conditional",
+      "limits": {
+        "maximum_running_tasks": 4,
+        "maximum_cpu_units_per_instance": 2048,
+        "maximum_memory_mb_per_instance": 4096
+      }
+    },
+    "eks": {
+      "status": "conditional",
+      "notes": ["Clusters must use standard-support Kubernetes versions."]
+    },
+    "bedrock": {
+      "status": "separate_environment",
+      "notes": ["Available through the AWS AI cloud sandbox with additional restrictions."]
+    },
+    "iam": {"status": "conditional"},
+    "secrets_manager": {"status": "supported"},
+    "vpc": {"status": "supported"}
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/cloud.schema.json",
+  "title": "Cloud provider definition",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "display_name",
+    "implementation_status",
+    "infrastructure_options",
+    "initial_service_ids"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"type": "string"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "implementation_status": {
+      "enum": ["active", "planned", "retired"]
+    },
+    "infrastructure_options": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "initial_service_ids": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

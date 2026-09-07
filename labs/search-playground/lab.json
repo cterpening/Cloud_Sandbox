@@ -1,0 +1,74 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.1.0",
+  "id": "search-playground",
+  "title": "Search and Retrieval Playground",
+  "summary": "Seed five original synthetic documents, query Azure AI Search, and evaluate retrieved evidence with an extractive answer demo.",
+  "state": "implemented",
+  "difficulty": "beginner",
+  "time_tier": "standard",
+  "domains": [
+    "search",
+    "ai",
+    "evaluation"
+  ],
+  "portable_capabilities": [
+    "information_retrieval",
+    "evidence_grounding",
+    "retrieval_evaluation"
+  ],
+  "objectives": [
+    "Seed five original synthetic documents, query Azure AI Search, and evaluate retrieved evidence with an extractive answer demo.",
+    "Compare local stand-ins with real Azure services.",
+    "Export sanitized evidence and clean up only this deployment."
+  ],
+  "implementations": {
+    "azure": {
+      "status": "implemented",
+      "estimated_minutes": 60,
+      "required_services": [
+        "azure_functions",
+        "app_service",
+        "storage",
+        "application_insights",
+        "log_analytics",
+        "monitor_alerts",
+        "ai_search"
+      ],
+      "optional_services": [],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "resource_requirements": {
+        "app_service": {
+          "sku": "Y1",
+          "server_farms": 1
+        },
+        "ai_search": {
+          "sku": "free",
+          "resources": 1,
+          "indexes": 1,
+          "documents": 5
+        }
+      },
+      "sandbox_notes": [
+        "Implemented and tested offline; not verified in a live sandbox.",
+        "Run one project at a time. Reuse the assigned group; never own it in Terraform.",
+        "Short-lived connection strings and authenticated public service endpoints are sandbox compromises."
+      ],
+      "production_extensions": [
+        "Use least-privilege workload identities, private networking where supported, durable state and release controls.",
+        "Add load, security and resilience tests appropriate to a production workload."
+      ]
+    }
+  },
+  "evidence": [
+    "Bounded functional-check summary",
+    "Relevant sanitized telemetry",
+    "Reviewed cleanup outcome"
+  ],
+  "verification_records": []
+}

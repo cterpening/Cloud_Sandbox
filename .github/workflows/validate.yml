@@ -1,0 +1,75 @@
+name: Validate workshop
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Validate catalogs and manifests
+        shell: pwsh
+        run: ./scripts/Test-Catalog.ps1
+      - name: Render project catalog
+        shell: pwsh
+        run: ./scripts/Get-LabCatalog.ps1
+      - name: Exercise tooling regressions
+        shell: pwsh
+        run: ./scripts/Test-Tooling.ps1
+      - name: Check every Azure implementation
+        shell: pwsh
+        run: |
+          Get-ChildItem labs -Directory | ForEach-Object {
+            ./scripts/Test-LabCompatibility.ps1 -LabManifest "$($_.FullName)/lab.json" -PlatformProfile catalog/platforms/pluralsight/azure.json -Cloud azure -FailOnIncompatible
+            if ($LASTEXITCODE) { throw "Compatibility failed for $($_.Name)" }
+          }
+      - name: Package without credentials
+        shell: pwsh
+        run: ./scripts/Publish-Lab.ps1 -Lab tiny-notes -PackageOnly
+
+  application:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.11', '3.14']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: apps/workshop/requirements.txt
+      - run: python -m pip install -r apps/workshop/requirements.txt
+      - run: python -m unittest discover -s tests -v
+
+  terraform:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        root:
+          - modules/function-workshop
+          - labs/observable-serverless-api/implementations/azure/terraform
+          - labs/tiny-notes/implementations/azure/terraform
+          - labs/queue-worker/implementations/azure/terraform
+          - labs/broken-dependency/implementations/azure/terraform
+          - labs/search-playground/implementations/azure/terraform
+    defaults:
+      run:
+        working-directory: ${{ matrix.root }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: '1.14.6'
+          terraform_wrapper: false
+      - run: terraform fmt -check
+      - run: terraform init -backend=false -input=false -lockfile=readonly
+      - run: terraform validate -no-color
+      - run: terraform test -no-color

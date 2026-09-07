@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/lab.schema.json",
+  "title": "Portable cloud lab manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "summary",
+    "state",
+    "difficulty",
+    "time_tier",
+    "domains",
+    "portable_capabilities",
+    "objectives",
+    "implementations",
+    "evidence"
+  ],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"type": "string"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+    "title": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "state": {"enum": ["idea", "designed", "implemented", "verified", "published", "maintenance", "retired"]},
+    "difficulty": {"enum": ["beginner", "intermediate", "advanced"]},
+    "time_tier": {"enum": ["quick", "standard", "extended", "maximum"]},
+    "domains": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "portable_capabilities": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "objectives": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1
+    },
+    "implementations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status", "estimated_minutes", "required_services", "requirements"],
+        "properties": {
+          "status": {"enum": ["idea", "planned", "implemented", "verified", "design_only", "retired"]},
+          "estimated_minutes": {"type": "integer", "minimum": 1},
+          "required_services": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+            "uniqueItems": true
+          },
+          "optional_services": {
+            "type": "array",
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+            "uniqueItems": true
+          },
+          "resource_requirements": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {"sku": {"type": "string", "minLength": 1}},
+              "additionalProperties": {"type": "number", "minimum": 0}
+            }
+          },
+          "requirements": {
+            "type": "object",
+            "required": ["managed_identity", "gpu", "resource_group_creation", "concurrent_sandboxes"],
+            "properties": {
+              "managed_identity": {"type": "boolean"},
+              "gpu": {"type": "boolean"},
+              "resource_group_creation": {"type": "boolean"},
+              "concurrent_sandboxes": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": false
+          },
+          "sandbox_notes": {"type": "array", "items": {"type": "string"}},
+          "production_extensions": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    },
+    "verification_records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["platform", "cloud", "verified_on", "result"],
+        "properties": {
+          "platform": {"type": "string"},
+          "cloud": {"type": "string"},
+          "verified_on": {"type": "string", "format": "date"},
+          "result": {"enum": ["passed", "passed_with_notes", "failed"]},
+          "duration_minutes": {"type": "integer", "minimum": 1},
+          "notes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

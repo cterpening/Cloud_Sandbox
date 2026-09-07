@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.1.0",
+  "id": "replace-lab-id",
+  "title": "Replace Lab Title",
+  "summary": "Replace with one outcome-focused sentence.",
+  "state": "idea",
+  "difficulty": "intermediate",
+  "time_tier": "standard",
+  "domains": ["replace_domain"],
+  "portable_capabilities": ["replace_capability"],
+  "objectives": ["Replace with a measurable learning objective."],
+  "implementations": {
+    "azure": {
+      "status": "idea",
+      "estimated_minutes": 60,
+      "required_services": [],
+      "optional_services": [],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "sandbox_notes": [],
+      "production_extensions": []
+    }
+  },
+  "evidence": ["Replace with one verifiable artifact."],
+  "verification_records": []
+}

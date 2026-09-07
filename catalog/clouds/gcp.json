@@ -1,0 +1,26 @@
+{
+  "$schema": "../../schemas/cloud.schema.json",
+  "schema_version": "0.1.0",
+  "id": "gcp",
+  "display_name": "Google Cloud Platform",
+  "implementation_status": "planned",
+  "infrastructure_options": [
+    "terraform"
+  ],
+  "initial_service_ids": [
+    "cloud_functions",
+    "cloud_run",
+    "cloud_logging",
+    "cloud_monitoring",
+    "cloud_storage",
+    "pubsub",
+    "firestore",
+    "cloud_sql",
+    "gke",
+    "artifact_registry",
+    "vertex_ai",
+    "vertex_workbench",
+    "iam",
+    "vpc"
+  ]
+}

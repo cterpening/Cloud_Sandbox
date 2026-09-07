@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.1.0",
+  "id": "tiny-notes",
+  "title": "Tiny Notes App",
+  "summary": "Run a small browser/API application backed by Azure Table Storage, then restart the client and read the saved notes.",
+  "state": "implemented",
+  "difficulty": "beginner",
+  "time_tier": "standard",
+  "domains": [
+    "applications",
+    "storage"
+  ],
+  "portable_capabilities": [
+    "http_serverless_compute",
+    "structured_storage",
+    "application_state"
+  ],
+  "objectives": [
+    "Run a small browser/API application backed by Azure Table Storage, then restart the client and read the saved notes.",
+    "Compare local stand-ins with real Azure services.",
+    "Export sanitized evidence and clean up only this deployment."
+  ],
+  "implementations": {
+    "azure": {
+      "status": "implemented",
+      "estimated_minutes": 45,
+      "required_services": [
+        "azure_functions",
+        "app_service",
+        "storage",
+        "application_insights",
+        "log_analytics",
+        "monitor_alerts"
+      ],
+      "optional_services": [],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "resource_requirements": {
+        "app_service": {
+          "sku": "Y1",
+          "server_farms": 1
+        }
+      },
+      "sandbox_notes": [
+        "Implemented and tested offline; not verified in a live sandbox.",
+        "Run one project at a time. Reuse the assigned group; never own it in Terraform.",
+        "Short-lived connection strings and authenticated public service endpoints are sandbox compromises."
+      ],
+      "production_extensions": [
+        "Use least-privilege workload identities, private networking where supported, durable state and release controls.",
+        "Add load, security and resilience tests appropriate to a production workload."
+      ]
+    }
+  },
+  "evidence": [
+    "Bounded functional-check summary",
+    "Relevant sanitized telemetry",
+    "Reviewed cleanup outcome"
+  ],
+  "verification_records": []
+}

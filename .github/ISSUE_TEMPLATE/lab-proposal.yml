@@ -1,0 +1,64 @@
+name: Lab proposal
+description: Propose a portable lab or a new cloud implementation.
+title: "[Lab]: "
+labels:
+  - lab-proposal
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Learning outcome
+      description: What should the learner be able to build, observe, diagnose, or decide?
+    validations:
+      required: true
+  - type: textarea
+    id: scenario
+    attributes:
+      label: Scenario
+      description: Describe the synthetic real-world scenario.
+    validations:
+      required: true
+  - type: dropdown
+    id: first-cloud
+    attributes:
+      label: First cloud implementation
+      options:
+        - Azure
+        - AWS
+        - GCP
+        - Local only
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Intended sandbox platform
+      placeholder: Pluralsight, Whizlabs, O'Reilly, or unrestricted
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Services and environmental requirements
+      description: Include permissions, regions, SKUs, quotas, duration, identity, and GPU needs.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Verification evidence
+      description: What deterministic output proves the lab worked?
+    validations:
+      required: true
+  - type: textarea
+    id: production
+    attributes:
+      label: Production extension
+      description: What security, reliability, identity, networking, or scale controls differ outside the sandbox?
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary sources
+      description: Provide authoritative URLs supporting the proposal.
+    validations:
+      required: true
