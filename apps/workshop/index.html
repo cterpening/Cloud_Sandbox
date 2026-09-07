@@ -24,8 +24,9 @@ body{font:17px system-ui;background:#f4f5f1;color:#18332a;max-width:800px;margin
 <option value="GET /api/deadletters">Queue: inspect dead letters</option>
 <option value="GET /api/checkout">Broken dependency: try checkout</option>
 <option value="POST /api/seed">Search: load sample documents</option>
-<option value="GET /api/search?q=poison">Search: find poison-message guidance</option>
+<option value="GET /api/search">Search: retrieve matching guidance</option>
 </select>
+<label for="query">Search terms (search project only)</label><input id="query" value="poison" maxlength="200">
 <label for="body">JSON body (POST requests)</label><textarea id="body" rows="3">{}</textarea>
 <button id="send">Run experiment</button>
 <pre id="result" aria-live="polite">Choose an experiment for the project you started.</pre>
@@ -33,9 +34,10 @@ body{font:17px system-ui;background:#f4f5f1;color:#18332a;max-width:800px;margin
 const route=document.querySelector('#route'),body=document.querySelector('#body'),result=document.querySelector('#result');
 route.addEventListener('change',()=>{body.value=route.value.includes('/notes')?'{"text":"A synthetic workshop note"}':route.value.includes('/messages')?'{"id":"demo-order-1","kind":"normal"}':'{}';});
 document.querySelector('#send').addEventListener('click',async()=>{
- const [method,path]=route.value.split(' ');const headers={'Content-Type':'application/json'};
+ const [method,routePath]=route.value.split(' ');const headers={'Content-Type':'application/json'};
+ const path=routePath==='/api/search'?routePath+'?q='+encodeURIComponent(document.querySelector('#query').value):routePath;
  const key=document.querySelector('#key').value;if(key)headers['x-functions-key']=key;
- try{const response=await fetch(path,{method,headers,...(method==='POST'?{body:body.value}:{})});
+ try{const response=await fetch(path,{method,headers,redirect:'error',...(method==='POST'?{body:body.value}:{})});
  const text=await response.text();let formatted=text;try{formatted=JSON.stringify(JSON.parse(text),null,2)}catch{}
  result.textContent=`HTTP ${response.status}\n${formatted}`;}catch{result.textContent='Request failed. Check the running project and network.';}
 });

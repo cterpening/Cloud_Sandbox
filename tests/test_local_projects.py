@@ -41,6 +41,14 @@ class LocalProjectTests(unittest.TestCase):
     def test_redirects_cannot_forward_a_function_key(self):
         self.assertIsNone(NoRedirects().redirect_request(None, None, 302, "redirect", {}, "https://synthetic.invalid"))
 
+    def test_search_page_accepts_custom_queries(self):
+        from core import Workshop
+        from local_adapters import MemoryStore
+        page = Workshop("search-playground", MemoryStore()).handle("GET", "/api/ui").body
+        self.assertIn('id="query"', page)
+        self.assertIn('encodeURIComponent', page)
+        self.assertIn("redirect:'error'", page)
+
 
 if __name__ == "__main__":
     unittest.main()
