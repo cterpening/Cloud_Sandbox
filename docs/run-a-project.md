@@ -6,6 +6,11 @@ instead of `python` where that is your installed command. Cloud deployments use
 Python 3.11, Functions runtime 4, Terraform 1.9+ (tested with 1.14.6), and the pinned
 AzureRM 4.64.0 provider. Run commands from the repository root unless stated otherwise.
 
+The Azure Functions Python package is pinned to 1.25.0 for the Python 3.11 host.
+Package major version 2 requires Python 3.13+, so do not upgrade it independently
+of the cloud runtime. The app still uses the decorator-based Python v2 programming
+model; that model name is different from the package version.
+
 ## Start locally
 
 Choose `observable-serverless-api`, `tiny-notes`, `queue-worker`,
@@ -142,6 +147,8 @@ Sources reviewed 2026-09-06:
 - [Starting a sandbox and session limits](https://help.pluralsight.com/hc/en-us/articles/24425549311380-Cloud-sandboxes-getting-started)
 - [AzureRM CLI authentication](https://registry.terraform.io/providers/hashicorp/azurerm/4.64.0/docs/guides/azure_cli)
 - [Functions ZIP deployment](https://learn.microsoft.com/en-us/azure/azure-functions/deployment-zip-push)
+- [Functions Python SDK 1.25.0 runtime requirement](https://pypi.org/project/azure-functions/1.25.0/)
+- [Functions Python SDK 2.3.0 runtime requirement](https://pypi.org/project/azure-functions/2.3.0/)
 - [CLI deployment without publishing-password authentication](https://learn.microsoft.com/en-us/azure/app-service/configure-basic-auth-disable#deploy-without-basic-authentication)
 
 These are implemented examples with offline checks. A Pluralsight verification

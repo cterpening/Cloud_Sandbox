@@ -12,6 +12,7 @@ All notable changes will be recorded here.
 - Added run guides, an expanded idea menu and explicit implemented-versus-verified status.
 - Excluded the historical v0.1 reference and sensitive/generated files from Git.
 - Live Pluralsight deployment, telemetry/alert verification and cleanup remain unverified.
+- The first CI run caught a Functions SDK/runtime mismatch; pinned the Python-3.11-compatible SDK and retained both runtime test lanes.
 
 ## 0.1.0 - 2026-09-06
 
