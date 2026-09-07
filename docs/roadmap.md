@@ -2,10 +2,12 @@
 
 The roadmap is ordered by dependency and learning value. Dates will be assigned only when work is scheduled.
 
-Current snapshot (2026-09-06): the repository foundation and five small Azure
+Current snapshot (2026-09-07): the repository foundation and ten small Azure
 projects are implemented and offline-tested. Phase 1's live verification exit
 criteria are still open. Queue and retrieval breadth has begun in code, not yet
-in verified cloud runs. See [the project shelf](../labs/README.md).
+in verified cloud runs. File processing, networking, containers, SQL and flags now
+have code plus local/offline checks, alongside picker/coverage/maintenance tooling.
+See [the project shelf](../labs/README.md).
 
 ## Phase 0 — Repository operating system
 

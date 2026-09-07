@@ -55,10 +55,12 @@ labs/observable-serverless-api/
 
 The repository begins with Terraform because it supports all three target clouds and matches the project's platform-engineering focus. Cloud-native IaC such as Bicep, CloudFormation, and Google Cloud infrastructure tooling can be added as optional implementation variants.
 
-The five Azure roots share `modules/function-workshop/` and `apps/workshop/`.
+Seven Azure roots share `modules/function-workshop/`; the other three use separate
+network/container/SQL modules. All ten use original workloads in `apps/workshop/`.
 Repository-level scripts handle preflight, ZIP publishing, functional checks and
 guarded cleanup. The local runner uses in-memory adapters while the deployed
-Functions use actual Azure SDK adapters. See [ADR 0005](decisions/0005-five-small-runnable-projects.md).
+Functions use actual Azure SDK adapters. See [ADR 0005](decisions/0005-five-small-runnable-projects.md) and
+[ADR 0006](decisions/0006-multiple-workload-families.md).
 
 ## Data flow
 

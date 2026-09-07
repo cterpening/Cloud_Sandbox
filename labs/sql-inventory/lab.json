@@ -1,0 +1,64 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.2.0",
+  "id": "sql-inventory",
+  "title": "Tiny SQL Inventory",
+  "summary": "Create inventory, purchase stock transactionally and prove an oversell is rejected; use local SQLite or workstation-to-Azure-SQL TLS.",
+  "state": "implemented",
+  "difficulty": "beginner",
+  "time_tier": "standard",
+  "domains": [
+    "applications",
+    "databases",
+    "transactions"
+  ],
+  "portable_capabilities": [
+    "applications",
+    "databases",
+    "transactions"
+  ],
+  "objectives": [
+    "Create inventory, purchase stock transactionally and prove an oversell is rejected; use local SQLite or workstation-to-Azure-SQL TLS.",
+    "Try the healthy path, reproduce a controlled failure and verify recovery.",
+    "Collect sanitized evidence and remove only the selected deployment."
+  ],
+  "execution": {
+    "azure": "local-sql",
+    "local_minutes": 15
+  },
+  "implementations": {
+    "azure": {
+      "status": "implemented",
+      "estimated_minutes": 60,
+      "required_services": [
+        "sql_database"
+      ],
+      "optional_services": [],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "resource_requirements": {
+        "sql_database": {
+          "sku": "Basic"
+        }
+      },
+      "sandbox_notes": [
+        "Implemented with offline checks; no live Pluralsight deployment has been verified.",
+        "Use only the assigned resource group; one project per session.",
+        "Local adapters/simulations do not validate Azure permissions, timing, networking or quotas."
+      ],
+      "production_extensions": [
+        "Use least-privilege identities, durable protected state, release controls and service-appropriate private access."
+      ]
+    }
+  },
+  "evidence": [
+    "Allowlisted functional check summary",
+    "Sanitized recovery observations",
+    "Reviewed cleanup outcome"
+  ],
+  "verification_records": []
+}

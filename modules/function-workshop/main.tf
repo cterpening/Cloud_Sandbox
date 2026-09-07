@@ -12,6 +12,8 @@ locals {
   name      = "ws-${var.short_name}-${random_string.suffix.result}"
   is_queue  = var.project == "queue-worker"
   is_search = var.project == "search-playground"
+  is_files  = var.project == "file-pipeline"
+  is_flags  = var.project == "feature-flags"
   tags = {
     project    = var.project
     purpose    = "disposable-learning"
@@ -143,6 +145,8 @@ resource "azurerm_linux_function_app" "workshop" {
     } : {}, local.is_search ? {
     SEARCH_ENDPOINT = "https://${azurerm_search_service.workshop[0].name}.search.windows.net"
     SEARCH_KEY      = azurerm_search_service.workshop[0].primary_key
+    } : {}, local.is_flags ? {
+    APP_CONFIGURATION_CONNECTION = azurerm_app_configuration.workshop[0].primary_write_key[0].connection_string
   } : {})
   tags       = local.tags
   depends_on = [azurerm_storage_table.items]

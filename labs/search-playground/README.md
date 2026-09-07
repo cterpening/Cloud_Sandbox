@@ -88,3 +88,18 @@ Reviewed 2026-09-06; documentation review is not live verification.
 
 - [Pluralsight Azure restrictions](https://help.pluralsight.com/hc/en-us/articles/24392988447636-Azure-cloud-sandbox)
 - [Azure AI Search Python quickstart](https://learn.microsoft.com/en-us/azure/search/search-get-started-text)
+
+## Try
+
+Seed the five synthetic documents and compare the top results for the golden queries.
+
+## Break
+
+Search for an unknown term and confirm the extractive answer abstains rather than fabricating guidance.
+
+## Remix
+
+Add an original document and its expected query, then compare local token overlap with Azure ranking. Vector/LLM integration remains a separate future implementation.
+
+See the [architecture cards](../../docs/architecture-cards.md) and
+[coverage matrix](../../docs/coverage.md) to choose another independent experiment.

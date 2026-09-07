@@ -1,0 +1,4 @@
+resource_group_name = "YOUR_ASSIGNED_SANDBOX_GROUP"
+location = "eastus"
+ssh_public_key = "REPLACE_WITH_YOUR_PUBLIC_SSH_KEY"
+fault = "healthy"

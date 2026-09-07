@@ -1,0 +1,34 @@
+#cloud-config
+# Ubuntu supplies Python; no package installation or internet egress is required.
+write_files:
+  - path: /opt/workshop-server.py
+    permissions: '0644'
+    content: |
+      from http.server import BaseHTTPRequestHandler, HTTPServer
+      class Handler(BaseHTTPRequestHandler):
+          def do_GET(self):
+              body = b'{"status":"healthy","synthetic":true}'
+              self.send_response(200)
+              self.send_header("Content-Type", "application/json")
+              self.send_header("Content-Length", str(len(body)))
+              self.end_headers()
+              self.wfile.write(body)
+      HTTPServer(("0.0.0.0", 8080), Handler).serve_forever()
+  - path: /etc/systemd/system/workshop.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=Synthetic network workshop
+      After=network.target
+      [Service]
+      ExecStart=/usr/bin/python3 /opt/workshop-server.py
+      User=nobody
+      Restart=on-failure
+      NoNewPrivileges=true
+      ProtectSystem=strict
+      PrivateTmp=true
+      [Install]
+      WantedBy=multi-user.target
+runcmd:
+  - systemctl daemon-reload
+  - systemctl enable --now workshop.service

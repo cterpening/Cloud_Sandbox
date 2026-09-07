@@ -1,0 +1,5 @@
+resource_group_name = "YOUR_ASSIGNED_SANDBOX_GROUP"
+location = "eastus"
+app_version = "v1"
+broken_startup = false
+# Optionally pin a reviewed official Python image digest with container_image.

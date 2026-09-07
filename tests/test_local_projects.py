@@ -1,4 +1,4 @@
-"""Run the same user-facing checker against all five real loopback servers."""
+"""Run the same user-facing checker against all catalogued loopback servers."""
 from pathlib import Path
 import sys
 import threading

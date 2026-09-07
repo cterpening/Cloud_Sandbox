@@ -1,8 +1,8 @@
 # What else could we premake?
 
-This is an idea menu, not a curriculum or a support promise. The first five are
-implemented; everything below is a **proposal** needing its own profile check and
-working deployment. A few useful combinations are a starting point, not a claim
+This is an idea menu, not a curriculum or a support promise. Ten projects are
+implemented; the [shelf](../labs/README.md) is the current executable catalog. This
+menu also preserves **proposals** needing their own profile check and deployment. A few useful combinations are a starting point, not a claim
 that all possible combinations work.
 
 ## Next experiments
@@ -32,8 +32,9 @@ that all possible combinations work.
 | AI-adjacent | Incident assistant | Propose—but never auto-run—a repair from synthetic evidence. |
 | Composition | Tiny order system | Combine API, queue, receipt, failure and evidence. |
 
-Networking, containers and extra data services need new implementations and quota
-checks. They are not included in the five starters. A composed project should
+The new file pipeline, Network Detective, Container Playground, SQL Inventory and
+Feature Flags projects cover selected ideas above. Container revisions/traffic
+splitting, Cosmos, cache-aside and a composed order system remain proposals. A composed project should
 share infrastructure; do not deploy every root together to create a capstone.
 
 ## How the screenshot's links influence the ideas

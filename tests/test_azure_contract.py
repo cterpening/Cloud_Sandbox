@@ -18,12 +18,13 @@ except ImportError:
 @unittest.skipIf(func is None, "Install apps/workshop/requirements.txt to check Azure SDK contracts")
 class AzureContractTests(unittest.TestCase):
     def test_function_indexing_and_key_authentication(self):
-        for project in ("observable-serverless-api", "tiny-notes", "queue-worker", "broken-dependency", "search-playground"):
+        from core import FUNCTION_PROJECTS
+        for project in FUNCTION_PROJECTS:
             with patch.dict(os.environ, {"WORKSHOP_PROJECT": project}):
                 sys.modules.pop("function_app", None)
                 entry = importlib.import_module("function_app")
                 functions = entry.app.get_functions()
-                self.assertEqual(len(functions), 3 if project == "queue-worker" else 2)
+                self.assertEqual(len(functions), 3 if project in ("queue-worker", "file-pipeline") else 2)
                 api = next(f for f in functions if f.get_function_name() == "api")
                 trigger = next(b for b in api.get_bindings() if b.type == "httpTrigger")
                 self.assertEqual(trigger.auth_level, func.AuthLevel.FUNCTION)
@@ -31,7 +32,7 @@ class AzureContractTests(unittest.TestCase):
                 with patch.object(entry, "AzureStore", MemoryStore):
                     request = func.HttpRequest("GET", "https://synthetic.invalid/api/health", body=b"", route_params={"path": "health"})
                     # Search construction needs endpoint settings; mock it, not a network request.
-                    with patch.object(entry, "AzureSearch"):
+                    with patch.object(entry, "AzureSearch"), patch.object(entry, "AzureFiles"), patch.object(entry, "AzureFlags"):
                         response = api.get_user_function()(request)
                     self.assertEqual(json.loads(response.get_body())["project"], project)
 

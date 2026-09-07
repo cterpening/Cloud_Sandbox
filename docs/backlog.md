@@ -2,11 +2,15 @@
 
 This is an idea inventory, not a commitment to implement every item. Priority favors reusable foundations, short verified labs, and material that supports several future content families.
 
-## Current delivery snapshot — 2026-09-06
+## Current delivery snapshot — 2026-09-07
 
-Implemented and offline-tested: five [starter projects](../labs/README.md), shared
-Terraform/Python foundations, schema/compatibility regression checks, read-only
-preflight, application packaging, bounded functional evidence and guarded cleanup.
+Implemented and offline-tested: ten [starter projects](../labs/README.md), shared
+Functions/network/container/SQL Terraform foundations, schema/compatibility checks,
+read-only preflight, application packaging, bounded evidence and guarded cleanup.
+Added a manifest-driven picker, Try / Break / Remix guides, architecture cards,
+generated coverage, dependency proposals and read-only maintenance checks.
+Delivered examples now include Blob/Event Grid processing, private DNS/NSG faults,
+ACI version/startup experiments, SQL transactions and App Configuration flags.
 The [next-project menu](project-ideas.md) is the short browsing list; the inventory
 below preserves longer-term possibilities.
 

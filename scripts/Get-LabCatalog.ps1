@@ -19,6 +19,9 @@ foreach ($file in $labFiles) {
     $rows.Add([pscustomobject]@{
         lab_id             = $lab.id
         title              = $lab.title
+        domains            = @($lab.domains) -join ', '
+        local_minutes      = $lab.execution.local_minutes
+        azure_runner       = $lab.execution.azure
         lab_state          = $lab.state
         difficulty         = $lab.difficulty
         time_tier          = $lab.time_tier

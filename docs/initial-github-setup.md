@@ -14,7 +14,7 @@ Do not create a second repository or change visibility as part of normal updates
 
 ## Continuous integration
 
-The included workflow checks catalog contracts, all five application scenarios,
+The included workflow checks catalog contracts, all ten application scenarios,
 SDK contracts and mock Terraform plans. It does not use sandbox credentials,
 perform `apply`, or certify live Azure compatibility.
 

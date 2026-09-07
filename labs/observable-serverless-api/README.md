@@ -89,3 +89,18 @@ Reviewed 2026-09-06; documentation review is not live verification.
 - [Pluralsight Azure restrictions](https://help.pluralsight.com/hc/en-us/articles/24392988447636-Azure-cloud-sandbox)
 - [Application Insights overview](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview)
 - [Metric alert overview](https://learn.microsoft.com/en-us/azure/azure-monitor/alerts/alerts-types#metric-alerts)
+
+## Try
+
+Send normal, slow and failed requests; correlate the resulting synthetic telemetry using the existing query pack.
+
+## Break
+
+Repeat the controlled fail request, inspect the alert condition, then restore normal traffic and observe recovery. Ingestion is asynchronous; local mode cannot verify Monitor.
+
+## Remix
+
+Change the bounded delay or add a new synthetic operation and a matching verification rule. Keep traffic volume small.
+
+See the [architecture cards](../../docs/architecture-cards.md) and
+[coverage matrix](../../docs/coverage.md) to choose another independent experiment.

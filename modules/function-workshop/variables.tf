@@ -20,7 +20,7 @@ variable "project" {
   type = string
   validation {
     condition = contains([
-      "observable-serverless-api", "tiny-notes", "queue-worker", "broken-dependency", "search-playground"
+      "observable-serverless-api", "tiny-notes", "queue-worker", "broken-dependency", "search-playground", "file-pipeline", "feature-flags"
     ], var.project)
     error_message = "Unknown workshop project."
   }

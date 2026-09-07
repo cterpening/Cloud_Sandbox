@@ -3,10 +3,14 @@ import json
 import logging
 import os
 import azure.functions as func
-from core import Workshop, process_order
+from core import FUNCTION_PROJECTS, Workshop, process_order
 from azure_adapters import AzureStore, AzureQueue, AzureSearch
+from azure_extras import AzureFiles, AzureFlags
+from experiments import decode_file_event
 
 project = os.environ["WORKSHOP_PROJECT"]
+if project not in FUNCTION_PROJECTS:
+    raise ValueError("This project does not deploy as an Azure Function")
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 
@@ -14,7 +18,9 @@ def workshop():
     return Workshop(project, AzureStore(),
                     AzureQueue() if project == "queue-worker" else None,
                     AzureSearch() if project == "search-playground" else None,
-                    os.environ.get("DEPENDENCY_TABLE", "missingitems"))
+                    os.environ.get("DEPENDENCY_TABLE", "missingitems"),
+                    files=AzureFiles() if project == "file-pipeline" else None,
+                    flags=AzureFlags() if project == "feature-flags" else None)
 
 
 @app.route(route="ui", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
@@ -39,3 +45,12 @@ if project == "queue-worker":
         order = json.loads(message.get_body())
         result = process_order(order, AzureStore())
         logging.info(json.dumps({"event": "order_worker", "result": result}))
+
+
+if project == "file-pipeline":
+    @app.queue_trigger(arg_name="message", queue_name="file-events", connection="AzureWebJobsStorage")
+    def file_worker(message: func.QueueMessage):
+        event = decode_file_event(message.get_body())
+        # Event Grid queue delivery contains one event per message.
+        AzureFiles().process_event(event)
+        logging.info(json.dumps({"event": "file_worker", "result": "handled"}))

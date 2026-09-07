@@ -111,6 +111,18 @@ foreach ($file in Get-ChildItem $PSScriptRoot -Filter '*.ps1') {
 }
 Write-Host 'Tooling regression checks passed. Isolated fixtures remain in ignored artifacts/tooling-tests.'
 
+$picker = Run-Case $repo 'Start-Workshop' @('-AsJson')
+$catalogRows = @($picker.Text | ConvertFrom-Json)
+Assert-Case ($picker.Code -eq 0 -and $catalogRows.Count -eq 10) 'Picker discovers all ten implemented projects'
+$picker = Run-Case $repo 'Start-Workshop' @('-AsJson', '-Domain', 'networking', '-MaxMinutes', '15')
+$catalogRows = @($picker.Text | ConvertFrom-Json)
+Assert-Case ($picker.Code -eq 0 -and $catalogRows.Count -eq 1 -and $catalogRows[0].id -eq 'network-detective') 'Picker combines domain and local-time filters'
+$picker = Run-Case $repo 'Start-Workshop' @('-AsJson', '-Mode', 'Azure', '-MaxMinutes', '15')
+Assert-Case ($picker.Code -eq 0 -and @($picker.Text | ConvertFrom-Json).Count -eq 0) 'Azure time filters use Azure estimates'
+Assert-Case ((Run-Case $repo 'Start-Workshop' @('-Lab', '../outside', '-Mode', 'Azure')).Code -ne 0) 'Project paths cannot escape the catalog'
+Assert-Case ((Run-Case $repo 'Publish-Lab' @('-Lab', 'sql-inventory', '-PackageOnly')).Code -ne 0) 'SQL project cannot be packaged as a Function'
+Assert-Case ((Run-Case $repo 'Start-Workshop' @('-Lab', 'network-detective', '-Mode', 'Azure')).Code -eq 0) 'Azure selection shows guidance without cloud access'
+
 # Exercise the real native-process helper, then use synthetic responses to test
 # deployment-state guards. These tests never contact Azure or execute Terraform.
 . (Join-Path $PSScriptRoot 'Workshop.Tools.ps1')

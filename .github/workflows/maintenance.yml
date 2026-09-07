@@ -1,0 +1,19 @@
+name: Review workshop maintenance
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 13 * * 1'
+permissions:
+  contents: read
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - run: python scripts/maintain_catalog.py --check
+      - name: Check primary profile source availability
+        run: python scripts/maintain_catalog.py --sources

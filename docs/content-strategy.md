@@ -6,7 +6,7 @@ Create content that can use nearly any meaningful capability a sandbox exposes w
 
 ## Content building blocks
 
-The first release presents a shelf of five optional experiments, not a mandatory
+The current collection presents a shelf of ten optional experiments, not a mandatory
 curriculum. Shared code implements the reusable blocks below. Ideas do not become
 supported projects until code, instructions and verification justify that status.
 

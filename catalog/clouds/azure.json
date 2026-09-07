@@ -40,6 +40,8 @@
     "application_gateway",
     "front_door",
     "azure_firewall",
-    "azure_devops"
+    "azure_devops",
+    "app_configuration",
+    "azure_dns"
   ]
 }

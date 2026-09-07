@@ -92,3 +92,18 @@ Reviewed 2026-09-06; documentation review is not live verification.
 
 - [Pluralsight Azure restrictions](https://help.pluralsight.com/hc/en-us/articles/24392988447636-Azure-cloud-sandbox)
 - [Functions application settings](https://learn.microsoft.com/en-us/azure/azure-functions/functions-app-settings)
+
+## Try
+
+Observe the expected 503 and identify the mismatched table setting using the guide's evidence.
+
+## Break
+
+Repair dependency_table through a reviewed Terraform change, verify recovery, then reproduce the original configuration fault.
+
+## Remix
+
+Add a second bounded fault and an explicit diagnosis check. Keep injected failure separate from uncontrolled production-like outages.
+
+See the [architecture cards](../../docs/architecture-cards.md) and
+[coverage matrix](../../docs/coverage.md) to choose another independent experiment.

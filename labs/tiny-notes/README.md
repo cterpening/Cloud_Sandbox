@@ -88,3 +88,18 @@ Reviewed 2026-09-06; documentation review is not live verification.
 
 - [Pluralsight Azure restrictions](https://help.pluralsight.com/hc/en-us/articles/24392988447636-Azure-cloud-sandbox)
 - [Azure Tables Python client](https://learn.microsoft.com/en-us/python/api/overview/azure/data-tables-readme?view=azure-python)
+
+## Try
+
+Add a synthetic note in the browser and list it again. Local data is in memory; Azure notes use Table Storage.
+
+## Break
+
+Submit an empty or oversized note and expect validation failure. Confirm the list contains no rejected note.
+
+## Remix
+
+Add a bounded category field or a pagination exercise. Add adapter and checker coverage before claiming the variant works.
+
+See the [architecture cards](../../docs/architecture-cards.md) and
+[coverage matrix](../../docs/coverage.md) to choose another independent experiment.

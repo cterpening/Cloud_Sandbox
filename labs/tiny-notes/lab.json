@@ -62,5 +62,9 @@
     "Relevant sanitized telemetry",
     "Reviewed cleanup outcome"
   ],
-  "verification_records": []
+  "verification_records": [],
+  "execution": {
+    "azure": "functions",
+    "local_minutes": 10
+  }
 }

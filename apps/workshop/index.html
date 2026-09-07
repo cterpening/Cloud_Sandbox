@@ -25,6 +25,18 @@ body{font:17px system-ui;background:#f4f5f1;color:#18332a;max-width:800px;margin
 <option value="GET /api/checkout">Broken dependency: try checkout</option>
 <option value="POST /api/seed">Search: load sample documents</option>
 <option value="GET /api/search">Search: retrieve matching guidance</option>
+<option value="POST /api/files">Files: upload synthetic document</option>
+<option value="POST /api/files/tick">Files: process once (local only)</option>
+<option value="GET /api/files/results">Files: inspect processed/rejected results</option>
+<option value="POST /api/flags">Flags: set on, off or broken</option>
+<option value="GET /api/offer">Flags: evaluate offer</option>
+<option value="GET /api/network?fault=healthy">Network: healthy (local model)</option>
+<option value="GET /api/network?fault=nsg">Network: NSG failure (local model)</option>
+<option value="GET /api/network?fault=dns">Network: DNS failure (local model)</option>
+<option value="POST /api/inventory/items">SQL: create item</option>
+<option value="POST /api/inventory/purchase">SQL: purchase item</option>
+<option value="GET /api/inventory">SQL: stock and joined sales</option>
+<option value="GET /api/inventory/orders">SQL: order ledger</option>
 </select>
 <label for="query">Search terms (search project only)</label><input id="query" value="poison" maxlength="200">
 <label for="body">JSON body (POST requests)</label><textarea id="body" rows="3">{}</textarea>
@@ -32,7 +44,15 @@ body{font:17px system-ui;background:#f4f5f1;color:#18332a;max-width:800px;margin
 <pre id="result" aria-live="polite">Choose an experiment for the project you started.</pre>
 <script>
 const route=document.querySelector('#route'),body=document.querySelector('#body'),result=document.querySelector('#result');
-route.addEventListener('change',()=>{body.value=route.value.includes('/notes')?'{"text":"A synthetic workshop note"}':route.value.includes('/messages')?'{"id":"demo-order-1","kind":"normal"}':'{}';});
+const samples={
+ 'POST /api/notes':{text:'A synthetic workshop note'},
+ 'POST /api/messages':{id:'demo-order-1',kind:'normal'},
+ 'POST /api/files':{id:'demo-file-1',content:JSON.stringify({items:[{sku:'demo',quantity:3}]})},
+ 'POST /api/flags':{mode:'on'},
+ 'POST /api/inventory/items':{sku:'demo',stock:3},
+ 'POST /api/inventory/purchase':{sku:'demo',quantity:2}
+};
+route.addEventListener('change',()=>{body.value=JSON.stringify(samples[route.value]||{},null,2);});
 document.querySelector('#send').addEventListener('click',async()=>{
  const [method,routePath]=route.value.split(' ');const headers={'Content-Type':'application/json'};
  const path=routePath==='/api/search'?routePath+'?q='+encodeURIComponent(document.querySelector('#query').value):routePath;

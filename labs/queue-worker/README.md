@@ -92,3 +92,18 @@ Reviewed 2026-09-06; documentation review is not live verification.
 - [Pluralsight Azure restrictions](https://help.pluralsight.com/hc/en-us/articles/24392988447636-Azure-cloud-sandbox)
 - [Service Bus dead-letter queues](https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-dead-letter-queues)
 - [Functions Service Bus trigger](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus-trigger)
+
+## Try
+
+Submit the same normal order twice and inspect its single receipt.
+
+## Break
+
+Submit a poison order and follow its retries into dead letters. The local tick is a stand-in, not Service Bus timing.
+
+## Remix
+
+Design a dead-letter repair/replay screen, or compare competing consumers. Preserve idempotency and review quotas before changing infrastructure.
+
+See the [architecture cards](../../docs/architecture-cards.md) and
+[coverage matrix](../../docs/coverage.md) to choose another independent experiment.

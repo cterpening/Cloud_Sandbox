@@ -31,15 +31,15 @@ The lab proposal issue template can be used once the project is hosted on GitHub
 | `retired` | Retained for history but no longer recommended. |
 
 Public GitHub availability alone does not promote a project to `verified` or
-`published` maturity. The current five projects remain `implemented` until their
+`published` maturity. The current ten projects remain `implemented` until their
 live run records exist.
 
 ## Implementation checks
 
 Run `pwsh scripts/Test-Tooling.ps1` as well as catalog/compatibility checks.
-Install `apps/workshop/requirements.txt` in a virtual environment and run
+Install `apps/workshop/requirements.txt` and `apps/workshop/requirements-sql.txt` in a virtual environment and run
 `python -m unittest discover -s tests -v`. Shared workload/module changes must test
-all five projects. In each changed Terraform root, run `terraform init -backend=false`,
+all ten projects. In each changed Terraform root, run `terraform init -backend=false`,
 `terraform fmt -check`, `terraform validate` and `terraform test` (mock providers).
 The GitHub workflow performs these checks without cloud credentials; passing it
 does not prove a live deployment works.
@@ -53,6 +53,13 @@ does not prove a live deployment works.
 5. Check the target platform using `scripts/Test-LabCompatibility.ps1`.
 6. Add infrastructure, application code, tests, and evidence collection incrementally.
 7. Record the date and outcome of real sandbox verification.
+
+Declare `execution.azure` and `execution.local_minutes` for runnable projects.
+Provide Try / Break / Remix sections and extend the appropriate runner/checker
+instead of forcing every workload into Functions. Add its Terraform root to CI;
+`python scripts/maintain_catalog.py --check` detects omissions, stale coverage and
+broken local documentation links. Generate coverage with `--coverage`, then save
+the result to `docs/coverage.md`. Use the [maintenance guide](docs/maintenance.md).
 
 ## Sources and copyright
 

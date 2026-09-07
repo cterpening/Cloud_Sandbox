@@ -1,0 +1,24 @@
+terraform {
+  required_version = ">= 1.9, < 2.0"
+  required_providers {
+    azurerm = { source = "hashicorp/azurerm", version = "4.64.0" }
+    random  = { source = "hashicorp/random", version = "3.7.2" }
+  }
+}
+provider "azurerm" {
+  features {
+    app_configuration {
+      purge_soft_delete_on_destroy = false
+      recover_soft_deleted         = false
+    }
+  }
+  resource_provider_registrations = "none"
+}
+module "workshop" {
+  source              = "../../../../../modules/container-workshop"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  app_version         = var.app_version
+  broken_startup      = var.broken_startup
+  container_image     = var.container_image
+}

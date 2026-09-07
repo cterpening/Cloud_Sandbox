@@ -1,0 +1,70 @@
+{
+  "$schema": "../../schemas/lab.schema.json",
+  "schema_version": "0.2.0",
+  "id": "network-detective",
+  "title": "Network Detective",
+  "summary": "Diagnose DNS and NSG faults between two private small VMs; compare the local conceptual simulation with real probes.",
+  "state": "implemented",
+  "difficulty": "intermediate",
+  "time_tier": "standard",
+  "domains": [
+    "networking",
+    "compute",
+    "troubleshooting"
+  ],
+  "portable_capabilities": [
+    "networking",
+    "compute",
+    "troubleshooting"
+  ],
+  "objectives": [
+    "Diagnose DNS and NSG faults between two private small VMs; compare the local conceptual simulation with real probes.",
+    "Try the healthy path, reproduce a controlled failure and verify recovery.",
+    "Collect sanitized evidence and remove only the selected deployment."
+  ],
+  "execution": {
+    "azure": "network",
+    "local_minutes": 10
+  },
+  "implementations": {
+    "azure": {
+      "status": "implemented",
+      "estimated_minutes": 90,
+      "required_services": [
+        "virtual_network",
+        "virtual_machines",
+        "azure_dns",
+        "nat_gateway"
+      ],
+      "optional_services": [],
+      "requirements": {
+        "managed_identity": false,
+        "gpu": false,
+        "resource_group_creation": false,
+        "concurrent_sandboxes": 1
+      },
+      "resource_requirements": {
+        "virtual_machines": {
+          "sku": "Standard_B1s",
+          "instances": 2,
+          "total_cpus": 2,
+          "memory_gb_single_instance": 1
+        }
+      },
+      "sandbox_notes": [
+        "Implemented with offline checks; no live Pluralsight deployment has been verified.",
+        "Use only the assigned resource group; one project per session.",
+        "Local adapters/simulations do not validate Azure permissions, timing, networking or quotas."
+      ],
+      "production_extensions": [
+        "Use least-privilege identities, durable protected state, release controls and service-appropriate private access."
+      ]
+    }
+  },
+  "evidence": [
+    "Allowlisted functional check summary",
+    "Sanitized recovery observations",
+    "Reviewed cleanup outcome"
+  ],
+  "verification_records": []
+}

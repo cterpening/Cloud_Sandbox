@@ -29,17 +29,40 @@ function Invoke-WorkshopTool {
 
 function Get-WorkshopRoot {
   param([Parameter(Mandatory)][string]$Lab)
-  if ($Lab -notin @('observable-serverless-api', 'tiny-notes', 'queue-worker', 'broken-dependency', 'search-playground')) {
-    throw 'Unknown project.'
-  }
+  $null = Get-WorkshopManifest $Lab
   return (Resolve-Path (Join-Path $PSScriptRoot "../labs/$Lab/implementations/azure/terraform")).Path
+}
+
+function Get-WorkshopManifest {
+  param([Parameter(Mandatory)][string]$Lab)
+  if ($Lab -notmatch '^[a-z][a-z0-9-]*$') { throw 'Invalid project identifier.' }
+  $path = Join-Path $PSScriptRoot "../labs/$Lab/lab.json"
+  if (-not (Test-Path -LiteralPath $path)) { throw 'Unknown project.' }
+  $manifest = Get-Content -LiteralPath $path -Raw | ConvertFrom-Json
+  if ($manifest.id -ne $Lab -or $manifest.implementations.azure.status -notin @('implemented', 'verified')) {
+    throw 'The selected project has no executable Azure implementation.'
+  }
+  return $manifest
+}
+
+function Invoke-WorkshopInteractive {
+  param([Parameter(Mandatory)][string]$Name, [string[]]$Arguments = @())
+  $command = Get-Command $Name -CommandType Application -ErrorAction Stop | Select-Object -First 1
+  $start = [Diagnostics.ProcessStartInfo]::new($command.Source)
+  $start.UseShellExecute = $false
+  $start.WorkingDirectory = Split-Path $PSScriptRoot -Parent
+  foreach ($argument in $Arguments) { $start.ArgumentList.Add($argument) }
+  $process = [Diagnostics.Process]::Start($start)
+  $process.WaitForExit()
+  if ($process.ExitCode) { throw "$Name exited with code $($process.ExitCode)." }
 }
 
 function Get-WorkshopDeployment {
   param([Parameter(Mandatory)][string]$Lab)
   $root = Get-WorkshopRoot $Lab
   $output = Invoke-WorkshopTool terraform @("-chdir=$root", 'output', '-json') | ConvertFrom-Json
-  if ($output.project.value -ne $Lab -or -not $output.function_name.value) {
+  $resourceName = if ($output.resource_name) { $output.resource_name.value } else { $output.function_name.value }
+  if ($output.project.value -ne $Lab -or -not $resourceName) {
     throw 'The Terraform state does not describe the selected project.'
   }
   $account = Invoke-WorkshopTool az @('account', 'show', '--output', 'json') | ConvertFrom-Json
@@ -66,5 +89,5 @@ function Get-WorkshopDeployment {
       if ($Matches[1] -ne $output.resource_group_name.value) { throw 'State contains a resource in a different group.' }
     }
   }
-  return [pscustomobject]@{Root=$root; Output=$output; Account=$account; Resources=$resources}
+  return [pscustomobject]@{Root=$root; Output=$output; Account=$account; Resources=$resources; ResourceName=$resourceName}
 }

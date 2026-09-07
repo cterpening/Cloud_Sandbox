@@ -8,8 +8,10 @@ from urllib.error import HTTPError
 from urllib.parse import urlsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 import uuid
+import sys
 
-PROJECTS = ("observable-serverless-api", "tiny-notes", "queue-worker", "broken-dependency", "search-playground")
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "apps/workshop"))
+from core import PROJECTS, FUNCTION_PROJECTS
 
 
 class NoRedirects(HTTPRedirectHandler):
@@ -23,7 +25,13 @@ def check(project, base, mode="local", repaired=False):
     local = parsed.hostname in ("127.0.0.1", "localhost")
     if parsed.username or parsed.password or parsed.query or parsed.fragment:
         raise ValueError("Base URL must not contain credentials, a query or a fragment.")
-    if mode == "local" and (not local or parsed.scheme != "http"):
+    if project not in PROJECTS or mode not in ("local", "azure", "azure-sql"):
+        raise ValueError("Unknown project or execution mode")
+    if mode == "azure" and project not in FUNCTION_PROJECTS:
+        raise ValueError("Use the project-specific Azure checker for this workload")
+    if mode == "azure-sql" and project != "sql-inventory":
+        raise ValueError("Only SQL inventory supports the Azure SQL backend")
+    if mode in ("local", "azure-sql") and (not local or parsed.scheme != "http"):
         raise ValueError("Local checks accept only loopback HTTP URLs.")
     if mode == "azure" and (parsed.scheme != "https" or not (parsed.hostname or "").endswith(".azurewebsites.net")):
         raise ValueError("Azure checks require the Function App's HTTPS azurewebsites.net URL.")
@@ -94,6 +102,46 @@ def check(project, base, mode="local", repaired=False):
             time.sleep(0 if mode == "local" else 2)
         require(receipts.count(order_id) == 1, "Duplicate orders produce one receipt")
         require(any(row["order"]["id"] == poison_id for row in failed), "Poison message reached dead-letter queue")
+    elif project == "file-pipeline":
+        good, bad = str(uuid.uuid4()), str(uuid.uuid4())
+        document = {"id": good, "content": json.dumps({"items": [{"sku": "demo", "quantity": 3}]})}
+        request("/api/files", status=202, body=document)
+        request("/api/files", status=409, body=document)
+        request("/api/files", status=202, body={"id": bad, "content": "not-json"})
+        for attempt in range(45):
+            if mode == "local":
+                request("/api/files/tick", body={})
+            results = {r["id"]: r for r in request("/api/files/results")["results"]}
+            if good in results and bad in results:
+                break
+            time.sleep(0 if mode == "local" else 2)
+        require(results.get(good, {}).get("total_quantity") == 3, "Valid document processed")
+        require(results.get(bad, {}).get("disposition") == "rejected", "Malformed document quarantined")
+        require(True, "Duplicate input ID rejected")
+    elif project == "feature-flags":
+        for flag, variant in (("on", "beta"), ("off", "stable")):
+            request("/api/flags", body={"mode": flag})
+            require(request("/api/offer")["variant"] == variant, "Configuration changes response: " + flag)
+        request("/api/flags", body={"mode": "broken"})
+        require(request("/api/offer", status=503)["error"] == "invalid_feature_flag", "Invalid configuration fails visibly")
+        request("/api/flags", body={"mode": "off"})
+        require(request("/api/offer")["variant"] == "stable", "Configuration recovered")
+    elif project == "network-detective":
+        for fault, direct, named in (("healthy", True, True), ("nsg", False, False), ("dns", True, False)):
+            result = request("/api/network?fault=" + fault)
+            require(result["engine"] == "conceptual_simulation" and result["direct_connection"] == direct
+                    and result["named_connection"] == named, "Conceptual network diagnosis: " + fault)
+    elif project == "container-playground":
+        require(request("/api/container")["version"] in ("v1", "v2"), "Versioned container application responds")
+    elif project == "sql-inventory":
+        require(request("/api/inventory")["engine"] == ("azure_sql" if mode == "azure-sql" else "sqlite_memory"), "Expected database backend")
+        sku = "check-" + uuid.uuid4().hex[:12]
+        request("/api/inventory/items", status=201, body={"sku": sku, "stock": 3})
+        purchase = request("/api/inventory/purchase", status=201, body={"sku": sku, "quantity": 2})
+        require(purchase["remaining"] == 1, "Purchase decrements stock")
+        request("/api/inventory/purchase", status=409, body={"sku": sku, "quantity": 2})
+        row = next(r for r in request("/api/inventory")["items"] if r["sku"] == sku)
+        require(row["stock"] == 1 and row["sold"] == 2, "Overselling rejected and joined ledger consistent")
     # An allowlisted summary, never raw cloud responses or user data.
     return {"project": project, "mode": mode, "passed": True, "checks": checks}
 
@@ -102,7 +150,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project", choices=PROJECTS, required=True)
     parser.add_argument("--base-url", default="http://127.0.0.1:7071")
-    parser.add_argument("--mode", choices=("local", "azure"), default="local")
+    parser.add_argument("--mode", choices=("local", "azure", "azure-sql"), default="local")
     parser.add_argument("--expect-repaired", action="store_true")
     parser.add_argument("--evidence", type=Path)
     args = parser.parse_args()

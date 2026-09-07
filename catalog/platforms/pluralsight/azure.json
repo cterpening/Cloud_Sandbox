@@ -5,7 +5,7 @@
   "cloud": "azure",
   "profile_status": "active",
   "coverage": "initial_priority_services",
-  "reviewed_on": "2026-09-06",
+  "reviewed_on": "2026-09-07",
   "sources": [
     {
       "title": "Azure cloud sandbox",
@@ -113,7 +113,8 @@
         "maximum_total_cpus": 10,
         "maximum_memory_gb_single_instance": 14,
         "gpu": false,
-        "tpu": false
+        "tpu": false,
+        "allowed_skus": ["Standard_A1_v2","Standard_B1ms","Standard_B1s","Standard_B2ms","Standard_B2s","Standard_D1_v2","Standard_DS1_v2","Standard_D2","Standard_DS1","Standard_D2s_v3","Standard_DS3_v2","Standard_F2","Standard_D2s_v5","Standard_D2s_v4","Standard_DS1_v3"]
       },
       "notes": ["Only selected small A, B, D, DS, and F SKUs are permitted; consult the source before implementation."]
     },
@@ -228,6 +229,18 @@
     },
     "azure_devops": {
       "status": "unsupported"
+    },
+    "app_configuration": {
+      "status": "supported",
+      "notes": [
+        "Listed as supported in the normal Azure sandbox. Free SKU capacity must still be checked; data-plane access uses a short-lived store key without role assignment."
+      ]
+    },
+    "azure_dns": {
+      "status": "conditional",
+      "notes": [
+        "Azure DNS is listed as supported. Private DNS zone use is an inference from that service category and awaits live sandbox verification."
+      ]
     }
   }
 }

@@ -37,3 +37,19 @@ run "reject_unknown_dependency" {
   variables { dependency_table = "unapproved-table" }
   expect_failures = [var.dependency_table]
 }
+run "file_event_pipeline" {
+  command = plan
+  variables { project = "file-pipeline" }
+  assert {
+    condition     = length(azurerm_storage_container.pipeline) == 4 && length(azurerm_eventgrid_system_topic_event_subscription.files) == 1 && azurerm_storage_queue.file_events[0].name == "file-events"
+    error_message = "File processing needs its private containers and Event Grid queue path."
+  }
+}
+run "free_configuration" {
+  command = plan
+  variables { project = "feature-flags" }
+  assert {
+    condition     = azurerm_app_configuration.workshop[0].sku == "free" && !azurerm_app_configuration.workshop[0].purge_protection_enabled
+    error_message = "Keep the configuration experiment small and disposable."
+  }
+}

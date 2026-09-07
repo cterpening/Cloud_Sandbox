@@ -11,7 +11,9 @@ import time
 import uuid
 
 PROJECTS = ("observable-serverless-api", "tiny-notes", "queue-worker",
-            "broken-dependency", "search-playground")
+            "broken-dependency", "search-playground", "file-pipeline", "network-detective",
+            "container-playground", "sql-inventory", "feature-flags")
+FUNCTION_PROJECTS = tuple(p for p in PROJECTS if p not in ("network-detective", "container-playground", "sql-inventory"))
 CORPUS = json.loads(Path(__file__).with_name("corpus.json").read_text(encoding="utf-8"))
 
 
@@ -50,12 +52,13 @@ def process_order(order, store):
 
 
 class Workshop:
-    def __init__(self, project, store, queue=None, search=None, dependency_table="missingitems"):
+    def __init__(self, project, store, queue=None, search=None, dependency_table="missingitems", *, files=None, flags=None, inventory=None):
         if project not in PROJECTS:
             raise ValueError("Unknown project")
         self.project, self.store = project, store
         self.queue, self.search = queue, search
         self.dependency_table = dependency_table
+        self.files, self.flags, self.inventory = files, flags, inventory
 
     def handle(self, method, path, query=None, raw_body=b""):
         query = query or {}
@@ -127,4 +130,5 @@ class Workshop:
                 matches = self.search.query(question)
                 return Response(200, {"matches": matches, "answer": matches[0]["content"] if matches else None,
                                       "answer_mode": "extractive_demo", "engine": self.search.engine})
-        return Response(404, {"error": "Route is not part of this project."})
+        from experiments import route_experiment
+        return route_experiment(self, method, path, query, body)

@@ -9,7 +9,7 @@ Status: implemented/offline-tested; live Pluralsight verification pending.
 - Experiment and expected results: [project guide](../../README.md).
 
 Run commands from the repository root and select `$lab = 'observable-serverless-api'`.
-Each project has independent local Terraform state. Do not combine all five roots
+Each project has independent local Terraform state. Do not combine independent roots
 in one session or reuse expired-session state. Supply the assigned resource group;
 this implementation never creates or owns it.
 

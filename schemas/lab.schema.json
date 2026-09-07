@@ -106,6 +106,28 @@
         },
         "additionalProperties": false
       }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "azure",
+        "local_minutes"
+      ],
+      "properties": {
+        "azure": {
+          "enum": [
+            "functions",
+            "network",
+            "container",
+            "local-sql"
+          ]
+        },
+        "local_minutes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

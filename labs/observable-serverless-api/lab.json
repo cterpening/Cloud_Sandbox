@@ -116,5 +116,6 @@
     "Alert definition and observed state",
     "Cleanup result"
   ],
-  "verification_records": []
+  "verification_records": [],
+  "execution": {"azure": "functions", "local_minutes": 10}
 }

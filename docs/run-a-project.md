@@ -1,6 +1,6 @@
 # Run a project
 
-All five projects can be tried locally before spending a sandbox session. Python
+All ten projects can be tried locally before spending a sandbox session. Python
 3.11 or newer runs the local version with its standard library. Use `python3`
 instead of `python` where that is your installed command. Cloud deployments use
 Python 3.11, Functions runtime 4, Terraform 1.9+ (tested with 1.14.6), and the pinned
@@ -13,8 +13,8 @@ model; that model name is different from the package version.
 
 ## Start locally
 
-Choose `observable-serverless-api`, `tiny-notes`, `queue-worker`,
-`broken-dependency`, or `search-playground`:
+Choose any ID from the [project shelf](../labs/README.md), or run the interactive
+picker with `pwsh scripts/Start-Workshop.ps1`:
 
 ```powershell
 python apps/workshop/local.py --project tiny-notes
@@ -31,6 +31,9 @@ Stop with Ctrl+C. Local tables/queues/search live in memory and reset on restart
 They exercise application behavior, not Azure scaling, permissions, quotas,
 networking or delivery timing. Local search uses token overlap; Azure uses its
 actual search engine. Different rankings outside the golden examples are expected.
+Network Detective's local mode only shows predicted outcomes. SQL uses real
+in-memory SQLite transactions; Container Playground runs the actual small app
+without requiring Docker. Each guide explains its cloud differences.
 
 ## Deploy in Pluralsight Azure
 
@@ -52,7 +55,8 @@ resources inside the sandbox; it does not create the Pluralsight session.
    ```
 
 3. Edit the ignored `sandbox.auto.tfvars`: set the assigned group name, an approved
-   region, and your workstation's **public IPv4 /32**. `192.0.2.10` is a documentation
+   region, and the project-specific inputs. Functions and SQL require your
+   workstation's **public IPv4 /32**. `192.0.2.10` is a documentation
    placeholder, not your address. Use the public address shown by your router/network
    tools; do not use your private LAN address. Use the same egress network for Azure CLI
    publishing and the browser. VPN changes can change the required address.
@@ -68,7 +72,7 @@ resources inside the sandbox; it does not create the Pluralsight session.
    Read and approve the plan. There must be **no resource-group creation or role
    assignment**. Provider auto-registration is disabled; missing providers cause
    preflight to stop. Run one project at a time to preserve the two-plan allowance.
-5. Publish the application with an explicit remote build:
+5. **Functions projects only:** publish the application with an explicit remote build:
 
    ```powershell
    pwsh scripts/Publish-Lab.ps1 -Lab $lab
@@ -85,9 +89,25 @@ resources inside the sandbox; it does not create the Pluralsight session.
    Function key, and the app/SCM endpoints also have the /32 restriction. The static
    UI route contains no data. Give a freshly deployed Functions host time to start.
 
+## Other Azure execution paths
+
+Stop before step 5 for these projects; they do not use Function ZIP publishing:
+
+| Project | Required input | After reviewed Terraform apply |
+| --- | --- | --- |
+| [Network Detective](../labs/network-detective/implementations/azure/README.md) | Public SSH key; fault starts healthy | `pwsh scripts/Test-AzureProject.ps1 -Lab network-detective` |
+| [Container Playground](../labs/container-playground/implementations/azure/README.md) | Version / optional startup fault | `pwsh scripts/Test-AzureProject.ps1 -Lab container-playground` |
+| [SQL Inventory](../labs/sql-inventory/implementations/azure/README.md) | Workstation IPv4 /32 | Install requirements-sql.txt; `pwsh scripts/Start-SqlInventory.ps1` |
+
+For SQL, run the HTTP checker in another terminal with `--mode azure-sql`.
+For networking/container evidence, pass `-Evidence evidence/PROJECT-azure.json`.
+The network checker runs a fixed read-only probe on the private client VM; ACI
+checks use management-plane state and startup-probe logs. See each linked guide
+for exact expected results and limitations.
+
 ## Investigate and clean up
 
-Use Application Insights or the workspace named by `workspace_name` to inspect
+For Functions projects, use Application Insights or the workspace named by `workspace_name` to inspect
 requests. The [API queries](../labs/observable-serverless-api/implementations/azure/investigate.kql)
 also work for the other apps. The included alert has no external notification
 action; view its condition in Azure Monitor after generating failures. Telemetry
@@ -99,7 +119,7 @@ pwsh scripts/Remove-Lab.ps1 -Lab $lab
 ```
 
 This checks the active subscription against the state, displays a saved destroy
-plan, refuses resource-group deletion, and asks you to type the exact Function App
+plan, refuses resource-group deletion, and asks you to type the exact primary resource
 name immediately before applying that plan. It removes the deployment and its
 application data. The assigned resource group remains. State, packages and plans
 remain local and ignored; treat them as sensitive. Start each new sandbox session
