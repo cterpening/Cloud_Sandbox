@@ -1,7 +1,7 @@
 # Functions SDK 2.x requires Python 3.13+; the Azure host here uses Python 3.11.
 azure-functions==1.25.0
 azure-data-tables==12.7.0
-azure-servicebus==7.14.3
+azure-servicebus==7.15.0
 azure-search-documents==11.6.0
 azure-storage-blob==12.30.1
 azure-appconfiguration==1.9.0
